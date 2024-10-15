@@ -1,5 +1,5 @@
 ---
-title: "reading_data_from_the_web"
+title: "Reading Data From the Web"
 author: "Shumei Liu"
 date: "2024-10-10"
 output: github_document
@@ -11,6 +11,8 @@ library(rvest)
 library(httr)
 ```
 
+## Extracting tables
+
 ```{r}
 url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
 drug_use_html = read_html(url)
@@ -18,7 +20,7 @@ drug_use_html = read_html(url)
 drug_use_html
 ```
 
-Get the pieces U actually need.
+Get the pieces I actually need.
 
 ```{r}
 marj_use_df = 
@@ -55,6 +57,89 @@ nyc_cost_df =
 
 nyc_cost_df
 ```
+
+## CSS Selectors!
+
+```{r}
+swm_url = "https://www.imdb.com/list/ls070150896/"
+
+swm_html = read_html(swm_url)
+```
+
+```{r}
+swm_title_vec = 
+  swm_html |>
+  html_elements("") |> #use selector gadget to choose anything we want, and then copy the link and paste into the `html_elements()`. but I need to install the selector gadget
+  html_text()
+
+swm_runtime_vec =
+  swm_html |>
+  html_elements("") |>
+  html_text()
+
+swm_score_vec =
+  swm_html |>
+  html_elements("") |>
+  html_text()
+
+swm_df = 
+  tibble(
+    title = swm_title_vec,
+    score = swm_score_vec,
+    runtime = swm_runtime_vec)
+```
+
+Let's import some books
+
+```{r}
+
+```
+
+## Use API
+
+Get water data.
+
+```{r}
+nyc_water =
+  GET("https://data.cityofnewyork.us/resource/ia2d-e54m.csv") |>
+  content() #make the table in a good format
+
+nyc_water
+```
+
+Get BRFSS data.
+
+```{r}
+brfss_df =
+  GET("https://chronicdata.cdc.gov/resource/acme-vg9e.csv",
+      query = list("$limit" = 5000)) |> #if do not set the limit, there is only 1000 dataset
+  content()
+
+brfss_df
+```
+
+Pokemon API
+
+```{r}
+pokemon =
+  GET("https://pokeapi.co/api/v2/pokemon/ditto") |>
+  content()
+
+pokemon
+```
+
+```{r}
+pokemon$height
+pokemon$abilities
+```
+
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,11 @@
+---
+title: "Strings and factors"
+author: "Shumei Liu"
+date: "2024-10-15"
+output: github_document
+---
+
+```{r}
+library(rvest)
+```
+
